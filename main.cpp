@@ -18,6 +18,7 @@ std::vector<Coord> hilbert_vec; // vector used to store coordinates to be traver
 void hilbertUtil(int x, int y, int xi, int xj, int yi, int yj, int level) {
     if (level <= 0) {
         hilbert_vec.push_back({x + (xi + yi)/2, y + (xj + yj)/2});
+        //std::cout << x << " " << y << " <-> " << x + (xi + yi)/2 << " " << y + (xj + yj)/2 << std::endl;
     } else {
         hilbertUtil(x,           y,              yi/2,   yj/2,   xi/2,   xj/2,   level-1);
         hilbertUtil(x+xi/2,      y+xj/2,         xi/2,   xj/2,   yi/2,   yj/2,   level-1);
@@ -28,6 +29,12 @@ void hilbertUtil(int x, int y, int xi, int xj, int yi, int yj, int level) {
 
 // draw hilbert curve using vector of coordinates as reference
 void drawHilbert(cv::Mat image, int level) {
+
+    /* for (auto i : hilbert_vec) {
+        std::cout << i.x << " " << i.y << std::endl;
+    }
+    std::cout << "--------" << std::endl; */
+    
     double dist = WINDOW_N/pow(2, level+1);
     for (int i = 0; i < hilbert_vec.size()-1; i++) {
         cv::Point p1(hilbert_vec[i].x*dist, hilbert_vec[i].y*dist);
@@ -42,8 +49,8 @@ void hilbert(cv::Mat image, int level, int type) {
     int origin_x = 0, origin_y = 0;
 
     switch (type) {
-        case 0: origin_x = 2; origin_y = 2; break;
-        case 1: origin_x = 0; origin_y = 0; break;
+        case 0: origin_x = pow(2, level); origin_y = pow(2, level); break;
+        case 1: origin_x = pow(2, level); origin_y = 0; break;
         case 2: origin_x = 0; origin_y = 0; break;
         case 3: origin_x = 0; origin_y = 0; break;
         default: return;
